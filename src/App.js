@@ -2,12 +2,14 @@ import React, { Component } from "react"
 import "./App.css"
 import { database } from "./firebase"
 
+const root = database.ref()
+
 class App extends Component {
   state = {
     data: null
   }
   componentDidMount() {
-    database.ref().on("value", snap =>
+    root.on("value", snap =>
       this.setState(() => ({
         data: snap.val()
       }))
@@ -15,9 +17,10 @@ class App extends Component {
   }
   addData = submitEvent => {
     submitEvent.preventDefault()
-    const key = this.keyInput.value
+    // if no key given, let firebase generate key
+    const key = this.keyInput.value || root.push().key
     const value = this.valueInput.value
-    database.ref().update({
+    root.update({
       [key]: value
     })
   }
