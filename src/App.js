@@ -13,6 +13,14 @@ class App extends Component {
       }))
     )
   }
+  addData = submitEvent => {
+    submitEvent.preventDefault()
+    const key = this.keyInput.value
+    const value = this.valueInput.value
+    database.ref().update({
+      [key]: value
+    })
+  }
   render() {
     return (
       <div className="App">
@@ -22,9 +30,21 @@ class App extends Component {
         <pre className="App--data">
           {JSON.stringify(this.state.data, null, 2)}
         </pre>
+        <form onSubmit={this.addData} className="App-form">
+          <h2>Add data:</h2>
+          <label htmlFor="key">key</label>
+          <input type="text" id="key" ref={this.createKeyRef} />
+          <label htmlFor="value">value</label>
+          <input type="text" id="value" ref={this.createValueRef} />
+          {/* button needs to be present to allow form submission
+              although it styles can be set to display:none */}
+          <input type="submit" />
+        </form>
       </div>
     )
   }
+  createKeyRef = el => (this.keyInput = el)
+  createValueRef = el => (this.valueInput = el)
 }
 
 export default App
